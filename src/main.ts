@@ -21,19 +21,19 @@ client.on('ready', async () => {
   newsChannel = ChannelService.getTextChannelByName(client, channels.news.name);
 
   // The update frequency is in minutes
-  timer = setInterval(updateNewsData, updateFrequency * 60000);
+  timer = setInterval(() => updateNewsData(), updateFrequency * 60000);
 
-  updateNewsData();
+  updateNewsData(false);
 });
 
 /**
  * Update all the news data
  */
-function updateNewsData(): void {
+function updateNewsData(sendDataToDiscord = true): void {
   const data = GameService.getGamesDataFile(gamesDataFile);
 
   steamGames.forEach(id => {
-    GameService.getSteamGameById(id).then((game) => {
+    GameService.getSteamGameById(id).then(async game => {
       if (
         game &&
         game.id &&
@@ -41,11 +41,13 @@ function updateNewsData(): void {
         !!game.news[0].id &&
         data.updateLastNews(game.id, game.news[0].id.toString())
       ) {
-        newsChannel.sendMessage(
-          `**[${DateService.ddmmYYYY(game.news[0].date)}] - ${game?.name}** :\n${game.news[0].url}`
-        ).then(() => {
-          GameService.updateGamesDataFile(gamesDataFile, data);
-        });
+        if (sendDataToDiscord) {
+          await newsChannel.sendMessage(
+            `**[${DateService.ddmmYYYY(game.news[0].date)}] - ${game?.name}** :\n${game.news[0].url}`
+          );
+        }
+
+        GameService.updateGamesDataFile(gamesDataFile, data);
       }
     });
   });

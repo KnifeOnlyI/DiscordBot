@@ -22,27 +22,31 @@ export class GameService {
   public static async getSteamGameById(id: number): Promise<GameModel | null> {
     let game: GameModel | null = null;
 
-    const gameData = (await FetchService.json(`https://store.steampowered.com/api/appdetails?appids=${id}`))[id];
+    const jsonData = await FetchService.json(`https://store.steampowered.com/api/appdetails?appids=${id}`);
 
-    if (gameData && gameData && gameData.success && gameData.data) {
-      game = new GameModel(id, gameData.data.name);
+    if (jsonData) {
+      const gameData = jsonData[id];
 
-      const newsData = await FetchService.json(`https://api.steampowered.com/ISteamNews/GetNewsForApp/v0002?appid=${id}&maxLength=0`);
+      if (gameData && gameData && gameData.success && gameData.data) {
+        game = new GameModel(id, gameData.data.name);
 
-      if (newsData && newsData.appnews) {
-        // Sort descending by date (the most recent first)
-        newsData.appnews.newsitems.sort((a: any, b: any) => {
-          return b.date - a.date;
-        }).forEach((news: any) => {
-          game?.news.push(new GameNewsModel(
-            news.gid,
-            news.author,
-            news.title,
-            news.contents,
-            new Date(news.date * 1000),
-            news.url.replace(new RegExp(' ', 'g'), '%20')
-          ));
-        });
+        const newsData = await FetchService.json(`https://api.steampowered.com/ISteamNews/GetNewsForApp/v0002?appid=${id}&maxLength=0`);
+
+        if (newsData && newsData.appnews) {
+          // Sort descending by date (the most recent first)
+          newsData.appnews.newsitems.sort((a: any, b: any) => {
+            return b.date - a.date;
+          }).forEach((news: any) => {
+            game?.news.push(new GameNewsModel(
+              news.gid,
+              news.author,
+              news.title,
+              news.contents,
+              new Date(news.date * 1000),
+              news.url.replace(new RegExp(' ', 'g'), '%20')
+            ));
+          });
+        }
       }
     }
 
