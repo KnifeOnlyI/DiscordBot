@@ -7,6 +7,7 @@ export class GameNewsModel {
   /**
    * Create a new game news item
    *
+   * @param id The ID
    * @param author The author
    * @param title Tht title
    * @param contents The contents
@@ -14,6 +15,7 @@ export class GameNewsModel {
    * @param url The URL
    */
   constructor(
+    public readonly id?: number,
     public readonly author?: string,
     public readonly title?: string,
     public readonly contents?: string,

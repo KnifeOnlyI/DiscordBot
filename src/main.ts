@@ -1,5 +1,5 @@
 import {Client, Intents} from 'discord.js';
-import {channels, steamGames} from '../config/config.json';
+import {channels, gamesDataFile, steamGames, updateFrequency} from '../config/config.json';
 import {ChannelService} from './services/channel.service';
 import {TextChannelWrapper} from './wrapper/text-channel.wrapper';
 import {GameService} from './services/game.service';
@@ -13,25 +13,42 @@ const client = new Client({
 });
 
 let generalChannel: TextChannelWrapper;
-let updatesChannel: TextChannelWrapper;
+let newsChannel: TextChannelWrapper;
+let timer: NodeJS.Timer;
 
-client.on('ready', () => {
+client.on('ready', async () => {
   generalChannel = ChannelService.getTextChannelByName(client, channels.general.name);
-  updatesChannel = ChannelService.getTextChannelByName(client, channels.updates.name);
+  newsChannel = ChannelService.getTextChannelByName(client, channels.news.name);
+
+  // The update frequency is in minutes
+  timer = setInterval(updateNewsData, updateFrequency * 60000);
+
+  updateNewsData();
 });
 
-client.on('messageCreate', async (message) => {
-  if (message.content.toLowerCase() === 'updates' && message.channel.id === updatesChannel.getId()) {
-    steamGames.forEach(id => {
-      GameService.getSteamGameById(id).then((game) => {
-        if (game?.news[0].date) {
-          updatesChannel.sendMessage(
-            `**[${DateService.ddmmYYYY(game?.news[0].date)}] - ${game?.name}** :\n${game?.news[0].contents}`
-          );
-        }
-      });
+/**
+ * Update all the news data
+ */
+function updateNewsData(): void {
+  const data = GameService.getGamesDataFile(gamesDataFile);
+
+  steamGames.forEach(id => {
+    GameService.getSteamGameById(id).then((game) => {
+      if (
+        game &&
+        game.id &&
+        game.news.length > 0 &&
+        !!game.news[0].id &&
+        data.updateLastNews(game.id, game.news[0].id.toString())
+      ) {
+        newsChannel.sendMessage(
+          `**[${DateService.ddmmYYYY(game.news[0].date)}] - ${game?.name}** :\n${game.news[0].url}`
+        ).then(() => {
+          GameService.updateGamesDataFile(gamesDataFile, data);
+        });
+      }
     });
-  }
-});
+  });
+}
 
 client.login(process.env.DISCORD_TOKEN);

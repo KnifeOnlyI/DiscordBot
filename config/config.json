@@ -1,16 +1,24 @@
 {
+  "gamesDataFile": "dist/games-data.json",
+  "updateFrequency": 1440,
   "channels": {
     "general": {
       "name": "général"
     },
-    "updates": {
-      "name": "mises-a-jours"
+    "news": {
+      "name": "news"
     }
   },
   "steamGames": [
     1012790,
     374320,
     236430,
-    570940
+    570940,
+    1363430,
+    2310,
+    883710,
+    952060,
+    252490,
+    1172470
   ]
 }
