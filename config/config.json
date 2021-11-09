@@ -1,0 +1,16 @@
+{
+  "channels": {
+    "general": {
+      "name": "général"
+    },
+    "updates": {
+      "name": "mises-a-jours"
+    }
+  },
+  "steamGames": [
+    1012790,
+    374320,
+    236430,
+    570940
+  ]
+}

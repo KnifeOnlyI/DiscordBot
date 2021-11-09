@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "outDir": "dist",
+    "noImplicitAny": true,
+    "sourceMap": true,
+    "moduleResolution": "node",
+    "strict": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+  }
+}
