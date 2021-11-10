@@ -41,8 +41,6 @@ function updateNewsData(sendDataToDiscord = true): void {
         !!game.news[0].id &&
         data.updateLastNews(game.id, game.news[0].id.toString())
       ) {
-        sendDataToDiscord = false;
-
         if (sendDataToDiscord) {
           await newsChannel.sendMessage(
             `**[${DateService.ddmmYYYY(game.news[0].date)}] - ${game?.name}** :\n${game.news[0].url}`
