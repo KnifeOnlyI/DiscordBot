@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "tsc && node dist/src/main.js",
+    "build": "tsc",
+    "start": "node dist/src/main.js",
     "start:dev": "concurrently -k -n \"Typescript,Node\" -p \"[{name}]\" -c \"blue,green\" \"tsc --watch\" \"nodemon dist/src/main.js\""
   },
   "keywords": [],

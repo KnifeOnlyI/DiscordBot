@@ -1,0 +1,6 @@
+version: '2'
+services:
+  discord-bot:
+    environment:
+      - DISCORD_TOKEN=${DISCORD_TOKEN}
+    build: .
