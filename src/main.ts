@@ -4,6 +4,8 @@ import {ChannelService} from './services/channel.service';
 import {TextChannelWrapper} from './wrapper/text-channel.wrapper';
 import {GameService} from './services/game.service';
 import {DateService} from './services/date.service';
+import * as path from 'path';
+import {ActivityTypes} from 'discord.js/typings/enums';
 
 const client = new Client({
   intents: [
@@ -22,6 +24,11 @@ client.on('ready', async () => {
 
   // The update frequency is in minutes
   timer = setInterval(() => updateNewsData(), updateFrequency * 60000);
+
+  client.user?.setActivity({name: 'le serveur', type: ActivityTypes.WATCHING});
+
+  client.user?.setAvatar('resources/avatar.png')
+    .catch(error => console.log('Error when trying to change the bot avatar :', error));
 
   updateNewsData(false);
 });

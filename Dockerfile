@@ -8,6 +8,7 @@ RUN npm install
 COPY ./src ./src
 COPY ./config ./config
 COPY ./tsconfig.json ./tsconfig.json
+COPY ./resources ./resources
 RUN npm run build
 
 CMD ["npm", "start"]
