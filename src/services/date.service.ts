@@ -12,13 +12,14 @@ export class DateService {
    *
    * @return A string representation of the specified date (dd-mm-YYYY format)
    */
-  static ddmmYYYY(date: Date | undefined, separator='/') {
+  static ddmmYYYY(date: Date | undefined, separator = '/') {
     let results = '';
 
     if (date) {
+      const dayNumber = date.getDate();
       const monthNumber = date.getMonth() + 1;
 
-      const day = `${date.getDay() < 10 ? '0' : ''}${date.getDay()}`;
+      const day = `${dayNumber < 10 ? '0' : ''}${dayNumber}`;
       const month = `${monthNumber < 10 ? '0' : ''}${monthNumber}`;
       const year = `${date.getFullYear()}`;
 
