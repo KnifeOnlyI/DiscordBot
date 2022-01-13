@@ -14,6 +14,10 @@ export class FetchService {
    * @return The JSON content
    */
   static async json(url: string): Promise<any> {
-    return await fetch(url).then((r: any) => r.json());
+    return await fetch(url)
+      .then((r: any) => r.json())
+      .catch(() => {
+        return null;
+      });
   }
 }

@@ -27,11 +27,18 @@ client.on('ready', async () => {
 
   client.user?.setActivity({name: 'le serveur', type: ActivityTypes.WATCHING});
 
-  client.user?.setAvatar('resources/avatar.png')
-    .catch(error => console.log('Error when trying to change the bot avatar :', error));
+  client.user?.setAvatar('resources/avatar.png').catch(error => console.log('Error when trying to change the bot avatar :', error));
 
   updateNewsData(false);
 });
+
+if (process.env.NODE_ENV === 'dev') {
+  client.on('messageCreate', async (message) => {
+    if (message.content.toLowerCase() === 'test') {
+      updateNewsData(true);
+    }
+  });
+}
 
 /**
  * Update all the news data
@@ -60,4 +67,6 @@ function updateNewsData(sendDataToDiscord = true): void {
   });
 }
 
-client.login(process.env.DISCORD_TOKEN);
+client.login(process.env.DISCORD_TOKEN).then(() => {
+  console.log('Discord bot is online !');
+});
